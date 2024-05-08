@@ -22,7 +22,7 @@ class dia
         {
             for(j=0;j<3;j++)
             {
-                cout<<a[i][j]<<endl;
+                cout<<a[i][j];
             }
         }
     }
@@ -79,11 +79,11 @@ class dia
         }
         if(a[i][j]==0)
         {
-            cout<<"this is a diagonal matrix:\n";
+            cout<<"this is a diagonal matrix:";
         }
         else
         {
-            cout<<"this is not a diagonal matrix:\n";
+            cout<<"this is not a diagonal matrix:";
         }
     }
 
