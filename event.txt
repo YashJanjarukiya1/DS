@@ -1,0 +1,335 @@
+mysql> CREATE TABLE events(id int primary key,event_name varchar(10),visitor varchar(10),properties json,browser json);
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> insert into events values(1,"Event1","Henil",'{ "page" : "/" }' , '{ "name" : "Safari" , "OS" : "mac os" , "resolution" : { "x" : 1920 , "y" : 1080 } }');
+Query OK, 1 row affected (0.04 sec)
+
+mysql> insert into events values(2,"Event2","Ranveer",'{ "page" : "-" }' , '{ "name" : "Firefox" , "OS" : "Linux" , "resolution" : { "x" : 2560 , "y" : 1600 } }');
+Query OK, 1 row affected (0.05 sec)
+
+mysql> insert into events values(3,"Event3","Microsoft",'{ "page" : "+" }' , '{ "name" : "Chorme" , "OS" : "Windows" , "resolution" : { "x" : 4560 , "y" : 1750 } }');
+Query OK, 1 row affected (0.05 sec)
+
+mysql> select * from events;
++----+------------+-----------+---------------+---------------------------------------------------------------------------+
+| id | event_name | visitor   | properties    | browser                                                                   |
++----+------------+-----------+---------------+---------------------------------------------------------------------------+
+|  1 | Event1     | Henil     | {"page": "/"} | {"OS": "mac os", "name": "Safari", "resolution": {"x": 1920, "y": 1080}}  |
+|  2 | Event2     | Ranveer   | {"page": "-"} | {"OS": "Linux", "name": "Firefox", "resolution": {"x": 2560, "y": 1600}}  |
+|  3 | Event3     | Microsoft | {"page": "+"} | {"OS": "Windows", "name": "Chorme", "resolution": {"x": 4560, "y": 1750}} |
++----+------------+-----------+---------------+---------------------------------------------------------------------------+
+3 rows in set (0.00 sec)
+
+
+______________________________________________________________________________________________________________________________________
+
+
+Reading Data
+
+1. We can run a simple SELECT statement to see the data in the table.
+
+mysql> select * from events;
++----+------------+-----------+---------------+---------------------------------------------------------------------------+
+| id | event_name | visitor   | properties    | browser                                                                   |
++----+------------+-----------+---------------+---------------------------------------------------------------------------+
+|  1 | Event1     | Henil     | {"page": "/"} | {"OS": "mac os", "name": "Safari", "resolution": {"x": 1920, "y": 1080}}  |
+|  2 | Event2     | Ranveer   | {"page": "-"} | {"OS": "Linux", "name": "Firefox", "resolution": {"x": 2560, "y": 1600}}  |
+|  3 | Event3     | Microsoft | {"page": "+"} | {"OS": "Windows", "name": "Chorme", "resolution": {"x": 4560, "y": 1750}} |
++----+------------+-----------+---------------+---------------------------------------------------------------------------+
+3 rows in set (0.00 sec)
+
+
+2. To pull values out of the JSON columns, you use the column path operator ( ->).
+Example :
+
+mysql> SELECT id, browser->'$.name' browser FROM events;
++----+-----------+
+| id | browser   |
++----+-----------+
+|  1 | "Safari"  |
+|  2 | "Firefox" |
+|  3 | "Chorme"  |
++----+-----------+
+3 rows in set (0.00 sec)
+
+
+3. To remove the quote marks, you use the inline path operator (->>) as follows:
+Example :
+
+mysql> SELECT id, browser->>'$.name' browser FROM events;
++----+---------+
+| id | browser |
++----+---------+
+|  1 | Safari  |
+|  2 | Firefox |
+|  3 | Chorme  |
++----+---------+
+3 rows in set (0.00 sec)
+
+or
+for multiple columns :
+
+mysql> SELECT id, browser ->> '$.name' as field1, browser ->> '$.OS' filed2 FROM events;
++----+---------+---------+
+| id | field1  | filed2  |
++----+---------+---------+
+|  1 | Safari  | mac os  |
+|  2 | Firefox | Linux   |
+|  3 | Chorme  | Windows |
++----+---------+---------+
+3 rows in set (0.00 sec)
+
+or
+for multiple columns with where condition from JSON field:
+
+mysql> SELECT id, browser ->> '$.name' field1, browser ->> '$.OS' field2 FROM events where browser ->> '$.name' = 'Chorme';
++----+--------+---------+
+| id | field1 | field2  |
++----+--------+---------+
+|  3 | Chorme | Windows |
++----+--------+---------+
+1 row in set (0.00 sec)
+
+
+or
+Select with where contion
+
+mysql> SELECT id, browser FROM events where browser ->> '$.name' = 'Chorme';
++----+---------------------------------------------------------------------------+
+| id | browser                                                                   |
++----+---------------------------------------------------------------------------+
+|  3 | {"OS": "Windows", "name": "Chorme", "resolution": {"x": 4560, "y": 1750}} |
++----+---------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+
+
+4. When used in combination with the JSON_EXTRACT(), you can retrieve the values for the specified column.
+Example:
+
+mysql> SELECT event_name, JSON_EXTRACT(browser, '$.name') FROM events;
++------------+---------------------------------+
+| event_name | JSON_EXTRACT(browser, '$.name') |
++------------+---------------------------------+
+| Event1     | "Safari"                        |
+| Event2     | "Firefox"                       |
+| Event3     | "Chorme"                        |
++------------+---------------------------------+
+3 rows in set (0.00 sec)
+
+
+
+______________________________________________________________________________________________________________________________________
+
+------------------------------------------------------( Update JSON Data in MySQL )---------------------------------------------------
+
+
+1. JSON_INSERT :
+
+
+(i)
+mysql> update events set browser = JSON_INSERT(browser,'$.version','4.0') where id =1;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from events;
++----+------------+-----------+---------------+--------------------------------------------------------------------------------------------+
+| id | event_name | visitor   | properties    | browser                                                                                    |
++----+------------+-----------+---------------+--------------------------------------------------------------------------------------------+
+|  1 | Event1     | Henil     | {"page": "/"} | {"OS": "mac os", "name": "Safari", "version": "4.0", "resolution": {"x": 1920, "y": 1080}} |
+|  2 | Event2     | Ranveer   | {"page": "-"} | {"OS": "Linux", "name": "Firefox", "resolution": {"x": 2560, "y": 1600}}                   |
+|  3 | Event3     | Microsoft | {"page": "+"} | {"OS": "Windows", "name": "Chorme", "resolution": {"x": 4560, "y": 1750}}                  |
++----+------------+-----------+---------------+--------------------------------------------------------------------------------------------+
+3 rows in set (0.00 sec)
+
+(ii)
+mysql> update events set browser = JSON_INSERT(browser,'$.version','4.0' , '$.year','2000') where id=1;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from events;
++----+------------+-----------+---------------+------------------------------------------------------------------------------------------------------------+
+| id | event_name | visitor   | properties    | browser                                                                                                    |
++----+------------+-----------+---------------+------------------------------------------------------------------------------------------------------------+
+|  1 | Event1     | Henil     | {"page": "/"} | {"OS": "mac os", "name": "Safari", "year": "2000", "version": "4.0", "resolution": {"x": 1920, "y": 1080}} |
+|  2 | Event2     | Ranveer   | {"page": "-"} | {"OS": "Linux", "name": "Firefox", "resolution": {"x": 2560, "y": 1600}}                                   |
+|  3 | Event3     | Microsoft | {"page": "+"} | {"OS": "Windows", "name": "Chorme", "resolution": {"x": 4560, "y": 1750}}                                  |
++----+------------+-----------+---------------+------------------------------------------------------------------------------------------------------------+
+3 rows in set (0.00 sec)
+
+
+
+2. JSON_REPLACE
+Replaces existing values in a JSON document and returns the result.
+
+Example :
+mysql> update events set browser = JSON_Replace(browser ,'$.OS','Macc') where id = 1;
+Query OK, 1 row affected (0.04 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from events;
++----+------------+-----------+---------------+----------------------------------------------------------------------------------------------------------+
+| id | event_name | visitor   | properties    | browser                                                                                                  |
++----+------------+-----------+---------------+----------------------------------------------------------------------------------------------------------+
+|  1 | Event1     | Henil     | {"page": "/"} | {"OS": "Macc", "name": "Safari", "year": "2000", "version": "4.0", "resolution": {"x": 1920, "y": 1080}} |
+|  2 | Event2     | Ranveer   | {"page": "-"} | {"OS": "Linux", "name": "Firefox", "resolution": {"x": 2560, "y": 1600}}                                 |
+|  3 | Event3     | Microsoft | {"page": "+"} | {"OS": "Windows", "name": "Chorme", "resolution": {"x": 4560, "y": 1750}}                                |
++----+------------+-----------+---------------+----------------------------------------------------------------------------------------------------------+
+3 rows in set (0.01 sec)
+
+
+
+
+3.JSON_SET
+Inserts or updates data in a JSON document and returns the result.
+
+Example :
+mysql> update events set browser = json_set(browser,'$.os','Mac','$.rating','5') where id =1;
+Query OK, 1 row affected (0.05 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from events;
++----+------------+-----------+---------------+--------------------------------------------------------------------------------------------------------------------------------------+
+| id | event_name | visitor   | properties    | browser                                                                                                                              |
++----+------------+-----------+---------------+--------------------------------------------------------------------------------------------------------------------------------------+
+|  1 | Event1     | Henil     | {"page": "/"} | {"OS": "Macc", "os": "Mac", "name": "Safari", "year": "2000", "rating": "5", "version": "4.0", "resolution": {"x": 1920, "y": 1080}} |
+|  2 | Event2     | Ranveer   | {"page": "-"} | {"OS": "Linux", "name": "Firefox", "resolution": {"x": 2560, "y": 1600}}                                                             |
+|  3 | Event3     | Microsoft | {"page": "+"} | {"OS": "Windows", "name": "Chorme", "resolution": {"x": 4560, "y": 1750}}                                                            |
++----+------------+-----------+---------------+--------------------------------------------------------------------------------------------------------------------------------------+
+3 rows in set (0.00 sec)
+
+
+
+4.JSON_ARRAY_APPEND :
+Appends values to the end of the indicated arrays within a JSON document and returns the
+result. This function was renamed to JSON_ARRAY_APPEND()
+
+
+
+Example : 
+mysql> select json_array_append(browser,'$.name',"Firefox") from events where id =3;
++----------------------------------------------------------------------------------------+
+| json_array_append(browser,'$.name',"Firefox")                                          |
++----------------------------------------------------------------------------------------+
+| {"OS": "Windows", "name": ["Chorme", "Firefox"], "resolution": {"x": 4560, "y": 1750}} |
++----------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+
+
+mysql> select json_array_append(browser,'$.name',"Firefox") from events where id = 1;
++---------------------------------------------------------------------------------------------------------------------------------------------------+
+| json_array_append(browser,'$.name',"Firefox")                                                                                                     |
++---------------------------------------------------------------------------------------------------------------------------------------------------+
+| {"OS": "Macc", "os": "Mac", "name": ["Safari", "Firefox"], "year": "2000", "rating": "5", "version": "4.0", "resolution": {"x": 1920, "y": 1080}} |
++---------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+
+mysql> select json_array_append(browser,'$.rating',"6") from events where id = 1;
++---------------------------------------------------------------------------------------------------------------------------------------------+
+| json_array_append(browser,'$.rating',"6")                                                                                                   |
++---------------------------------------------------------------------------------------------------------------------------------------------+
+| {"OS": "Macc", "os": "Mac", "name": "Safari", "year": "2000", "rating": ["5", "6"], "version": "4.0", "resolution": {"x": 1920, "y": 1080}} |
++---------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+
+
+5.JSON_REMOVE()  and  Json_extract() :
+
+
+(i) : delete the perticular attribute or coloumn from the table using json_remove() method.
+
+
+mysql> update events set browser = json_remove(browser,'$.name') where id =3;
+Query OK, 1 row affected (0.05 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from events;
++----+------------+-----------+---------------+--------------------------------------------------------------------------------------------------------------------------------------+
+| id | event_name | visitor   | properties    | browser                                                                                                                              |
++----+------------+-----------+---------------+--------------------------------------------------------------------------------------------------------------------------------------+
+|  1 | Event1     | Henil     | {"page": "/"} | {"OS": "Macc", "os": "Mac", "name": "Safari", "year": "2000", "rating": "5", "version": "4.0", "resolution": {"x": 1920, "y": 1080}} |
+|  2 | Event2     | Ranveer   | {"page": "-"} | {"OS": "Linux", "name": "Firefox", "resolution": {"x": 2560, "y": 1600}}                                                             |
+|  3 | Event3     | Microsoft | {"page": "+"} | {"OS": "Windows", "resolution": {"x": 4560, "y": 1750}}                                                                              |
++----+------------+-----------+---------------+--------------------------------------------------------------------------------------------------------------------------------------+
+3 rows in set (0.00 sec)
+
+
+
+(ii)  : Delete a record or row from the table using json_extract() method.
+
+
+mysql> delete from events where json_extract(browser, '$.OS') = 'Windows';
+Query OK, 1 row affected (0.05 sec)
+
+mysql> select * from events;
++----+------------+---------+---------------+--------------------------------------------------------------------------------------------------------------------------------------+
+| id | event_name | visitor | properties    | browser                                                                                                                              |
++----+------------+---------+---------------+--------------------------------------------------------------------------------------------------------------------------------------+
+|  1 | Event1     | Henil   | {"page": "/"} | {"OS": "Macc", "os": "Mac", "name": "Safari", "year": "2000", "rating": "5", "version": "4.0", "resolution": {"x": 1920, "y": 1080}} |
+|  2 | Event2     | Ranveer | {"page": "-"} | {"OS": "Linux", "name": "Firefox", "resolution": {"x": 2560, "y": 1600}}                                                             |
++----+------------+---------+---------------+--------------------------------------------------------------------------------------------------------------------------------------+
+2 rows in set (0.00 sec)
+
+
+
+6.JSON_MERGE() :
+
+
+mysql> select json_merge(browser,properties) from events where id = 2;
++---------------------------------------------------------------------------------------+
+| json_merge(browser,properties)                                                        |
++---------------------------------------------------------------------------------------+
+| {"OS": "Linux", "name": "Firefox", "page": "-", "resolution": {"x": 2560, "y": 1600}} |
++---------------------------------------------------------------------------------------+
+1 row in set, 1 warning (0.00 sec)
+
+
+
+mysql> select json_merge(browser,properties) as merge2Columns from events where id = 2;
++---------------------------------------------------------------------------------------+
+| merge2Columns                                                                         |
++---------------------------------------------------------------------------------------+
+| {"OS": "Linux", "name": "Firefox", "page": "-", "resolution": {"x": 2560, "y": 1600}} |
++---------------------------------------------------------------------------------------+
+1 row in set, 1 warning (0.00 sec)
+
+
+
+
+7.json_pretty() :
+
+
+(i)
+mysql> select json_pretty(browser) as Pretty from events where id = 2;
++----------------------------------------------------------------------------------------------+
+| Pretty                                                                                       |
++----------------------------------------------------------------------------------------------+
+| {
+  "OS": "Linux",
+  "name": "Firefox",
+  "resolution": 
+  {
+    "x": 2560,
+    "y": 1600
+  }
+  } 
+|
++----------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+
+
+(ii)
+mysql> select json_pretty(properties) from events where id = 2;
++-------------------------+
+| json_pretty(properties) |
++-------------------------+
+| {
+  "page": "-"
+  }     
+|
++-------------------------+
+1 row in set (0.00 sec)

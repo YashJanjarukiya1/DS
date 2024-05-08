@@ -1,0 +1,112 @@
+/* Implement the stack using Linked-List. */
+
+#include<iostream>
+using namespace std;
+class Node
+{
+	public :
+		int value;
+		Node *next;
+};
+
+Node *Top = NULL;
+
+void push()
+{
+	Node *Temp = new Node();
+	int num;
+	
+	cout << "Enter the element of stack : ";
+	cin >> num;
+	Temp->value = num;
+	Temp->next = NULL;
+	
+	if(Top == NULL)
+	{
+		Top = Temp;
+	}
+	else
+	{
+		Temp->next = Top;
+		Top = Temp;
+	}
+}
+
+void pop()
+{
+	if(Top == NULL)
+	{
+		cout << "\nStack is underflow(Empty)\n";
+	}
+	else
+	{
+		Node *tmp = Top;
+		Top = Top->next; 
+		cout << "Deleted element of the stack is :: " << tmp->value << endl;
+		delete tmp;
+	}
+}
+
+void peek()
+{
+	if(Top == NULL)
+	{
+		cout << "\nStack is Empty(Underflow)\n";
+	}
+	else
+	{
+		cout << "peek or top of the stack is :: " << Top->value << endl;
+	}
+}
+
+void display()
+{
+	if(Top == NULL)
+	{
+		cout << "\nStack is Empty(Underflow)\n";
+	}
+	else
+	{
+		Node *show = new Node();
+		show = Top;
+		
+		cout << "\nStack ::\n";
+		while(show != NULL)
+		{
+			cout << "[ " << show->value << " ]" << endl;
+			show = show->next;
+		}
+	}
+}
+
+int main()
+{
+	int Choice;	
+	do
+	{
+		cout << "\n---Menu---\n(1).push,(2)pop,(3)peek,(4)display,(5)exit \nEnter Choice :: ";
+		cin >> Choice;
+		switch(Choice)
+		{
+			case 1:
+				push();
+			break;
+			
+			case 2:
+				pop();
+			break;
+			
+			case 3:
+				peek();
+			break;
+			
+			case 4:
+				display();
+			break;
+			
+			default:
+				exit(0);
+		}
+	}
+	while(Choice != 5);
+}

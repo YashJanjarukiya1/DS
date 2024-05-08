@@ -1,0 +1,460 @@
+/*  Create a Singly Linked List, which have following methods :
+	-> 	1.Insert_at_first, 2.Insert_at_last, 3.Insert_between,
+	   	4.delete_at_first, 5.delete_at_last, 6.delete_between,
+		7.Find_the element of Node, 8.Total_no_of_Node and
+		9.Display_All_Node.
+______________________________________________________________________*/
+
+#include<iostream>
+using namespace std;
+class Node
+{
+	public :
+	int value;
+	Node *next;
+};
+
+Node *Head = NULL;
+
+void Insert_First()
+{
+	int num;
+	Node *Temp = new Node();
+
+	cout << "\nEnter the value of Node : ";
+	cin >> num;
+	Temp->value = num;
+	Temp->next = NULL;
+
+	if(Head == NULL)
+	{
+		Head = Temp;
+	}
+	else
+	{
+		Temp->next = Head;
+		Head = Temp;
+	}
+}
+
+void Insert_Last()
+{
+	int num;
+	Node *Temp = new Node();
+
+	cout << "\nEnter the value of Node : ";
+	cin >> num;
+	Temp->value = num;
+	Temp->next = NULL;
+
+	if(Head == NULL)
+	{
+		Head = Temp;
+	}
+	else
+	{
+		Node *q = new Node();
+		q = Head;
+		while(q->next != NULL)
+		{
+			q = q->next;
+		}
+		q->next = Temp;
+	}
+}
+
+void Insert_between()
+{
+	int position,num;
+	Node *Temp = new Node();
+
+	cout << "\nEnter any position : ";
+	cin >> position;
+
+	cout << "\nEnter the value of Node : ";
+	cin >> Temp->value;
+	Temp->next = NULL;
+
+	Node *q = Head;
+	if(position == 1)
+	{
+		Temp->next = q;
+		Temp = Head;
+	}
+	else
+	{
+		for(int i=1;i<(position-1);i++)
+		{
+			q = q->next;
+		}
+		Temp->next = q->next;
+		q->next = Temp;
+		
+	}
+}
+
+
+void Delete_at_first()
+{
+	if(Head == NULL)
+	{
+		cout << "\nList is Empty\n";
+	}
+	else
+	{
+		Node *Temp = Head;
+		Head = Head->next;
+		cout << "\nDeleted element of the list is :: " << Temp->value << "\n";
+		delete Temp;
+	}
+}
+		
+
+void Delete_at_last()
+{
+	Node *Temp = new Node();
+	if(Head == NULL)
+	{
+		cout << "\nLink List is Empty\n";
+	}
+	else if(Head->next == NULL)
+	{
+		Head = NULL;
+	}
+	else
+	{
+		Node *Last = Head;
+		while(Last->next->next != NULL)
+		{
+			Last = Last->next;
+		}
+		Temp = Last->next;
+		Last->next = NULL;
+		cout << "\nDeleted element of your list : " << Temp->value << endl;
+		delete Temp;
+	}
+}
+
+		
+void Delete_Between()
+{
+	int position;
+	Node *prev = new Node() ; //Memory Allocation
+	Node *p = new Node(); // Memory Allocation
+	
+	cout<<"\nEnter the Location :";
+	cin >> position;
+	
+	if(position < 1)
+	{
+		cout<<"\nLocation must be > 1"<<endl;
+	}
+	else if(position == 1)
+	{	
+		p = Head;
+		cout<<"\nDeleted Node is : "<<p->value << endl;
+		Head = p->next;			
+		delete p;
+	}
+	else
+	{
+		p = Head;
+		for(int i=1;i<(position-1);i++)
+		{
+			if(p != NULL)
+			{
+				p = p->next;
+			}
+		}
+		
+		if(p != NULL)
+		{
+			prev = p;
+			p = p->next;
+		}
+		cout<<"\nDeleted Node is : "<< p->value << endl;
+		prev->next = p->next;
+		delete p;
+	}
+}
+
+void Display()
+{
+	Node *show = new Node();
+	show = Head;
+
+	cout << "\nSingly Linked List :: ";
+	while(show != NULL)
+	{
+		cout << "[ " << show->value << " ]->";
+		show = show->next;
+	}
+	cout << endl;
+}
+
+void count()
+{
+	Node *show = new Node();
+	show = Head;
+	int Total = 0;
+
+	while(show != NULL)
+	{
+		Total++;
+		show = show->next;
+	}
+	cout<<"\nTotal Nodes are : " << Total << endl;
+}
+
+void search_1()
+{
+	int val,flag=0;
+    cout << "Enter value which you want to search : ";
+    cin >> val;
+    
+    	Node *q = Head;
+    	int i = 1;
+    
+    	while (q != NULL)
+    	{
+       		if(q->value == val)
+        		{
+            		flag = 1;
+           		break;
+        		}
+        		i++;
+        		q = q->next;
+    	}
+    
+    	if(flag == 1)
+    	{
+    		cout << "\nValue is present in Node " << i << endl;
+    	}
+    	else
+    	{
+    		cout << "\nValue is not present in current Link-List" << endl;
+    	}
+}
+
+void search_2()
+{
+	int pos,count=0;
+ 	cout << "\nEnter Node Position to find its value : ";
+    cin >> pos;
+    
+		Node *q = Head;
+   		while(q != NULL)
+    	{
+        	count++;
+        	q = q->next;
+    	}
+
+    	if(pos > count)
+    	{
+        	cout <<"\nplz enter Position <= " << count << endl;
+    	}
+    	else
+    	{
+        		Node *p = Head;
+        		int i = 1;
+        		while (p != NULL)
+        		{
+            		if(i == pos)
+            		{
+                			cout << "\nValue of Node." << pos << " have value : " << p->value << endl;
+            		}
+            		i++;
+            		p = p->next;
+        		}
+    	}
+}
+
+void search()
+{
+    	int c;
+    	cout << "\nEnter 1 for search value in Link-List : "
+    	<< "\n2. for search Node's value in Link-List : \nChoice ::  ";
+    	cin >> c;
+
+    	switch(c)
+    	{
+        		case 1:
+            		search_1();
+        		break;
+        
+       			case 2:
+            		search_2();
+        		break;
+        
+        		default:
+            		cout << "\nEnter correct choice (1 or 2)\n" << endl;
+   		}
+}
+
+
+int main()
+{
+	int Choice;
+	while(Choice != 10)
+	{
+		cout << "\n(1)Insert_First,(2)Insert_Last,(3)Insert_Position,"<< endl;
+		cout << "(4)Delete_First,(5)Delete_last,(6)Delete_Position," << endl;
+		cout << "(7)search_Node,(8)count_Node,(9)Display(),(10)Exit..\n";
+		cout << "Enter your Choice :: ";
+		cin >> Choice;
+
+		switch( Choice )
+		{
+			case 1 : 
+				Insert_First();
+			break;
+
+			case 2 : 
+				Insert_Last();
+			break;
+
+			case 3 : 
+				Insert_between();
+			break;
+
+			case 4 : 
+				Delete_at_first();
+			break;
+
+			case 5 : 
+				Delete_at_last();
+			break;
+
+			case 6 : 
+				Delete_Between();
+			break;
+
+			case 7 :
+				search();
+			break;
+
+			case 8 :
+				count();
+			break;
+	
+			case 9 : 
+				Display();
+			break;
+
+			default :
+				exit(0);
+		}
+	}
+}
+
+/*  ( output )
+
+darshan@darshan-Swift-SF314-43:~/Desktop$ g++ singly.cpp
+darshan@darshan-Swift-SF314-43:~/Desktop$ ./a.out
+
+(1)Insert_First,(2)Insert_Last,(3)Insert_Position,
+(4)Delete_First,(5)Delete_last,(6)Delete_Position,
+(7)search_Node,(8)count_Node,(9)Display(),(10)Exit..
+Enter your Choice :: 1
+
+Enter the value of Node : 10
+
+(1)Insert_First,(2)Insert_Last,(3)Insert_Position,
+(4)Delete_First,(5)Delete_last,(6)Delete_Position,
+(7)search_Node,(8)count_Node,(9)Display(),(10)Exit..
+Enter your Choice :: 1
+
+Enter the value of Node : 11
+
+(1)Insert_First,(2)Insert_Last,(3)Insert_Position,
+(4)Delete_First,(5)Delete_last,(6)Delete_Position,
+(7)search_Node,(8)count_Node,(9)Display(),(10)Exit..
+Enter your Choice :: 2
+
+Enter the value of Node : 9
+
+(1)Insert_First,(2)Insert_Last,(3)Insert_Position,
+(4)Delete_First,(5)Delete_last,(6)Delete_Position,
+(7)search_Node,(8)count_Node,(9)Display(),(10)Exit..
+Enter your Choice :: 3
+
+Enter any position : 3
+
+Enter the value of Node : 17
+
+(1)Insert_First,(2)Insert_Last,(3)Insert_Position,
+(4)Delete_First,(5)Delete_last,(6)Delete_Position,
+(7)search_Node,(8)count_Node,(9)Display(),(10)Exit..
+Enter your Choice :: 9
+
+Singly Linked List :: [ 11 ]->[ 10 ]->[ 17 ]->[ 9 ]->
+
+(1)Insert_First,(2)Insert_Last,(3)Insert_Position,
+(4)Delete_First,(5)Delete_last,(6)Delete_Position,
+(7)search_Node,(8)count_Node,(9)Display(),(10)Exit..
+Enter your Choice :: 8
+
+Total Nodes are : 4
+
+(1)Insert_First,(2)Insert_Last,(3)Insert_Position,
+(4)Delete_First,(5)Delete_last,(6)Delete_Position,
+(7)search_Node,(8)count_Node,(9)Display(),(10)Exit..
+Enter your Choice :: 7
+
+Enter 1 for search value in Link-List : 
+2. for search Node's value in Link-List : 
+Choice ::  1
+Enter value which you want to search : 10
+
+Value is present in Node 2
+
+(1)Insert_First,(2)Insert_Last,(3)Insert_Position,
+(4)Delete_First,(5)Delete_last,(6)Delete_Position,
+(7)search_Node,(8)count_Node,(9)Display(),(10)Exit..
+Enter your Choice :: 4
+
+Deleted element of the list is :: 11
+
+(1)Insert_First,(2)Insert_Last,(3)Insert_Position,
+(4)Delete_First,(5)Delete_last,(6)Delete_Position,
+(7)search_Node,(8)count_Node,(9)Display(),(10)Exit..
+Enter your Choice :: 9
+
+Singly Linked List :: [ 10 ]->[ 17 ]->[ 9 ]->
+
+(1)Insert_First,(2)Insert_Last,(3)Insert_Position,
+(4)Delete_First,(5)Delete_last,(6)Delete_Position,
+(7)search_Node,(8)count_Node,(9)Display(),(10)Exit..
+Enter your Choice :: 6
+
+Enter the Location :2
+
+Deleted Node is : 17
+
+(1)Insert_First,(2)Insert_Last,(3)Insert_Position,
+(4)Delete_First,(5)Delete_last,(6)Delete_Position,
+(7)search_Node,(8)count_Node,(9)Display(),(10)Exit..
+Enter your Choice :: 9
+
+Singly Linked List :: [ 10 ]->[ 9 ]->
+
+(1)Insert_First,(2)Insert_Last,(3)Insert_Position,
+(4)Delete_First,(5)Delete_last,(6)Delete_Position,
+(7)search_Node,(8)count_Node,(9)Display(),(10)Exit..
+Enter your Choice :: 5
+
+Deleted element of your list : 9
+
+(1)Insert_First,(2)Insert_Last,(3)Insert_Position,
+(4)Delete_First,(5)Delete_last,(6)Delete_Position,
+(7)search_Node,(8)count_Node,(9)Display(),(10)Exit..
+Enter your Choice :: 9
+
+Singly Linked List :: [ 10 ]->
+
+(1)Insert_First,(2)Insert_Last,(3)Insert_Position,
+(4)Delete_First,(5)Delete_last,(6)Delete_Position,
+(7)search_Node,(8)count_Node,(9)Display(),(10)Exit..
+Enter your Choice :: c
+darshan@darshan-Swift-SF314-43:~/Desktop$ 
+*/

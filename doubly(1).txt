@@ -1,0 +1,495 @@
+/*  Create a Doubly Linked List, which have following methods :
+	-> 	1.Insert_at_first, 2.Insert_at_last, 3.Insert_between,
+	   	4.delete_at_first, 5.delete_at_last, 6.delete_between,
+		7.Total_Node, 8.Find_Node,9.Display_All_Node.
+_____________________________________________________________________________*/
+
+#include<iostream>
+using namespace std;
+
+class Node
+{
+	public :
+	int value;
+	Node *next;
+	Node *prev;
+};
+
+Node *Head = NULL;
+
+void insert_first()
+{
+	Node *Temp = new Node();
+	int num;
+	cout << "\nEnter the value of Node : ";
+	cin >> num;
+
+	Temp->value = num;
+	Temp->next = NULL;
+	Temp->prev = NULL;
+
+	if(Head == NULL)
+	{
+		Temp->next = Head;
+		Temp->prev = NULL;
+		Head = Temp;
+	}
+	else
+	{
+		Temp->next = Head;
+		Head->prev = Temp;
+		Head = Temp;
+	}
+}
+
+void insert_last()
+{
+	Node *tmp = new Node();
+	int num;
+
+	cout << "\nEnter the value of Node : ";
+	cin >> num;
+
+	tmp->value = num;
+	tmp->next = NULL;
+	tmp->prev = NULL;
+
+	if(Head == NULL)
+	{
+		tmp->next = Head;
+		Head->prev = tmp;
+		Head = tmp;
+	}
+	else
+	{
+		Node *q = Head;
+		while(q->next != NULL)
+		{
+			q = q->next; // Node increment
+		}
+		q->next = tmp;
+		tmp->prev = q;
+		tmp->next = NULL;
+	}
+}
+
+void insert_position()
+{
+	if(Head == NULL)
+	{
+		cout << "\nLinked List is Empty\n";
+	}
+	else
+	{
+		int pos,num;
+
+		cout << "\nEnter any position of Node : ";
+		cin >> pos;
+
+		Node *Temp = new Node();
+
+		cout << "\nEnter the value of your Node : ";
+		cin >> num;
+		Temp->value = num;
+
+		if(pos == 1)
+		{
+			Temp->next = Head;
+			Head->prev = Temp;
+			Head = Temp;	
+		}
+		else
+		{
+			Node *q = new Node();
+			q = Head;
+
+			for(int i=1;i<(pos-1);i++)
+			{
+				q = q->next;
+			}
+			Temp->next = q->next;
+			q->next->prev = Temp;
+			Temp->prev = q;
+			q->next = Temp;
+		}
+	}
+}
+
+void delete_begin()
+{
+	if(Head == NULL)
+	{
+		cout << "\nLinked List is Empty\n";
+	}
+	else
+	{
+		Node *tmp = new Node();
+		tmp = Head;
+		Head = Head->next;
+		Head->prev = NULL;
+		cout << "\nDeleted Node of your list is : " << tmp->value << endl;
+		delete tmp;
+	}
+}
+
+void delete_last()
+{
+	Node *Temp = new Node();
+	if(Head == NULL)
+	{
+		cout << "\nLinked List is Empty\n";
+	}
+	else if(Head->next == NULL)
+	{
+		Head = NULL;
+	}
+	else
+	{
+		Node *q = new Node();
+		q = Head;
+		while(q->next->next != NULL)
+		{
+			q = q->next;
+		}
+		Temp = q->next;
+		q->next = NULL;
+		cout << "\nDeleted element of your List is : " << Temp->value << endl;
+		delete Temp;
+	}
+}
+
+void delete_position()
+{
+	int position;
+	
+	Node *prev = new Node() ; //Memory Allocation
+	Node *p = new Node(); // Memory Allocation
+	
+	cout<<"\nEnter any position :";
+	cin >> position;
+	
+	if(position < 1)
+	{
+		cout<<"\nposition must be > 1";
+	}
+	else if(position == 1)
+	{	
+		p = Head;
+		cout<<"\nDeleted Node is : " << p->value << endl;
+		Head = p->next;			
+		delete p;
+	}
+	else
+	{
+		p = Head;
+		for(int i=1;i<(position-1);i++)
+		{
+			if(p != NULL)
+			{
+				p = p->next;
+			}
+		}
+		
+		if(p != NULL)
+		{
+			prev = p;
+			p = p->next;
+		}
+		cout<<"\nDeleted Node is : "<< p->value << endl;
+		prev->next = p->next;
+		delete p;
+	}
+}
+
+void count()
+{
+	Node *show = new Node();
+	show = Head;
+
+	int Total = 0;
+	cout << "\nTotal Number of Node = ";
+	while(show != NULL)
+	{
+		Total++;
+		show = show->next;
+	}
+
+	cout<<Total<<endl;
+
+}
+
+void search_1()
+{
+    int val;
+    cout << "\nEnter value which you want to search : ";
+    cin >> val;
+    
+    int flag = 0;
+    
+    Node *q = Head;
+    int i = 1;
+    
+    while (q != NULL)
+    {
+    	if(q->value == val)
+    	{
+        		flag = 1;
+           	break;
+        	}
+        	i++;
+        	q = q->next;
+    }
+
+    if(flag == 1)
+    {
+    	cout << "\nValue is present in Node no." << i << " have value : " << q->value << endl;
+    }
+    else
+    {
+    	cout << "\nValue is not present in current Link-List" << endl;
+    }
+}
+
+void search_2()
+{
+	int pos;
+ 	cout << "\nEnter Node Position to find its value : ";
+	cin >> pos;
+
+	int count = 0;
+    
+	Node *q = Head;
+   	while(q != NULL)
+    	{
+    		count++;
+        		q = q->next;
+    	}
+
+    if(pos > count)
+    {
+    	cout <<"\nplz enter Position <= " << count << endl;
+    }
+    else
+    {
+    	Node *p = Head;
+    	int i = 1;
+        while (p != NULL)
+        {
+        	  if(i == pos)
+            {
+            	cout << "\nValue of Node." << pos << " have value : " << p->value << endl;
+            }
+            i++;
+            p = p->next;
+       	}
+    }
+}
+
+void search()
+{
+    int c;
+    cout << "\n1.for search value in Link-List : "<< endl;
+    cout << "2. for search Node's value in Link-List : \nChoice :: ";
+    cin >> c;
+
+    switch(c)
+    {
+    	case 1:
+       		search_1();
+    	break;
+        
+    	case 2:
+      		search_2();
+    	break;
+        
+    	default:
+       		cout << "\nEnter correct choice (1 or 2)\n" << endl;
+   	}
+}
+
+
+void Display()
+{
+	if(Head == NULL)
+	{
+		cout << "\nLinked List is Empty\n";
+	}
+	else
+	{
+		Node *show = new Node();
+		show = Head;
+
+		cout << "\nDoubly Link List :: ";
+		while(show != NULL)
+		{
+			// cout << "->[ " << show->prev << " | " << show->value << " | " << show->next << " ]";
+			cout << "->[ " << show->value << " ]";
+
+			show = show->next; // Node Increment 
+		}
+		cout << endl;
+	}
+}
+
+int main()
+{
+	int Choice;
+	while(Choice != 10)
+	{
+		cout << "\n(1)Insert_first,(2)Insert_last(3)Insert_between" << endl;
+		cout << "(4)Delete_first,(5)Delete_last,(6)Delete_between" << endl;
+		cout << "(7)count,(8)search,(9)Display,(10)exit()\nEnter Choice :: ";
+		cin >> Choice;
+
+		switch( Choice )
+		{
+			case 1:
+				insert_first();
+			break;
+
+			case 2:
+				insert_last();
+			break;
+
+			case 3:
+				insert_position();
+			break;
+
+			case 4:
+				delete_begin();
+			break;
+
+			case 5:
+				delete_last();
+			break;
+
+			case 6:
+				delete_position();
+			break;
+
+			case 7:
+				count();
+			break;
+
+			case 8:
+				search();
+			break;
+			
+			case 9:
+				Display();
+			break;
+
+			default :
+				exit(0);
+		}
+	}
+}
+
+
+/*  ( output )
+
+darshan@darshan-Swift-SF314-43:~/Desktop$ g++ doubly.cpp
+darshan@darshan-Swift-SF314-43:~/Desktop$ ./a.out
+
+(1)Insert_first,(2)Insert_last(3)Insert_between
+(4)Delete_first,(5)Delete_last,(6)Delete_between
+(7)count,(8)search,(9)Display,(10)exit()
+Enter Choice :: 1
+
+Enter the value of Node : 10
+
+(1)Insert_first,(2)Insert_last(3)Insert_between
+(4)Delete_first,(5)Delete_last,(6)Delete_between
+(7)count,(8)search,(9)Display,(10)exit()
+Enter Choice :: 1
+
+Enter the value of Node : 20
+
+(1)Insert_first,(2)Insert_last(3)Insert_between
+(4)Delete_first,(5)Delete_last,(6)Delete_between
+(7)count,(8)search,(9)Display,(10)exit()
+Enter Choice :: 2
+
+Enter the value of Node : 30
+
+(1)Insert_first,(2)Insert_last(3)Insert_between
+(4)Delete_first,(5)Delete_last,(6)Delete_between
+(7)count,(8)search,(9)Display,(10)exit()
+Enter Choice :: 3
+
+Enter any position of Node : 3
+
+Enter the value of your Node : 40
+
+(1)Insert_first,(2)Insert_last(3)Insert_between
+(4)Delete_first,(5)Delete_last,(6)Delete_between
+(7)count,(8)search,(9)Display,(10)exit()
+Enter Choice :: 9
+
+Doubly Link List :: ->[ 20 ]->[ 10 ]->[ 40 ]->[ 30 ]
+
+(1)Insert_first,(2)Insert_last(3)Insert_between
+(4)Delete_first,(5)Delete_last,(6)Delete_between
+(7)count,(8)search,(9)Display,(10)exit()
+Enter Choice :: 7
+
+Total Number of Node = 4
+
+(1)Insert_first,(2)Insert_last(3)Insert_between
+(4)Delete_first,(5)Delete_last,(6)Delete_between
+(7)count,(8)search,(9)Display,(10)exit()
+Enter Choice :: 8
+
+1.for search value in Link-List : 
+2. for search Node's value in Link-List : 
+Choice :: 2
+
+Enter Node Position to find its value : 3
+
+Value of Node.3 have value : 40
+
+(1)Insert_first,(2)Insert_last(3)Insert_between
+(4)Delete_first,(5)Delete_last,(6)Delete_between
+(7)count,(8)search,(9)Display,(10)exit()
+Enter Choice :: 6
+
+Enter any position :3
+
+Deleted Node is : 40
+
+(1)Insert_first,(2)Insert_last(3)Insert_between
+(4)Delete_first,(5)Delete_last,(6)Delete_between
+(7)count,(8)search,(9)Display,(10)exit()
+Enter Choice :: 5
+
+Deleted element of your List is : 30
+
+(1)Insert_first,(2)Insert_last(3)Insert_between
+(4)Delete_first,(5)Delete_last,(6)Delete_between
+(7)count,(8)search,(9)Display,(10)exit()
+Enter Choice :: 4
+
+Deleted Node of your list is : 20
+
+(1)Insert_first,(2)Insert_last(3)Insert_between
+(4)Delete_first,(5)Delete_last,(6)Delete_between
+(7)count,(8)search,(9)Display,(10)exit()
+Enter Choice :: 9
+
+Doubly Link List :: ->[ 10 ]
+
+(1)Insert_first,(2)Insert_last(3)Insert_between
+(4)Delete_first,(5)Delete_last,(6)Delete_between
+(7)count,(8)search,(9)Display,(10)exit()
+Enter Choice :: 7
+
+Total Number of Node = 1
+
+(1)Insert_first,(2)Insert_last(3)Insert_between
+(4)Delete_first,(5)Delete_last,(6)Delete_between
+(7)count,(8)search,(9)Display,(10)exit()
+Enter Choice :: c
+darshan@darshan-Swift-SF314-43:~/Desktop$ 
+
+
+*/

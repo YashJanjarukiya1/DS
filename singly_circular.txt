@@ -1,0 +1,461 @@
+//  Create singly Circular Linked List.
+
+#include<iostream>
+using namespace std;
+
+class Node
+{
+	public :
+	int value;
+	Node *next;	
+};
+
+Node *Head = NULL;
+
+void insert_first()
+{
+	Node *Temp = new Node();
+
+   int num;
+   cout << "\nEnter the value of your Node : ";
+   cin >> num;
+
+   Temp->value = num;
+   Temp->next = Head;
+
+   	if(Head == NULL)
+   	{
+   		Head = Temp;
+   		Head->next = Head;
+   	}
+   	else
+   	{
+   		Node *q = Head;
+      	while(q->next != Head)
+      	{
+      		q = q->next;
+   		}
+   		Temp->next = Head;
+   		q->next = Temp; 
+   		Head = Temp;
+	}
+}
+
+void delete_first()
+{
+	if(Head == NULL)
+	{
+		cout << "\nLinked list is empty\n";
+	}
+	else if(Head->next == Head)
+	{
+		cout << "\nDeleted element of your list : " << Head->value << endl;
+		Head = NULL;
+	}
+	else
+	{
+		Node *q = Head;
+		Node *t = Head;
+		while(q->next != Head)
+		{
+			q = q->next;
+		}
+		Head = Head->next;
+		q->next = Head;
+
+		cout << "\nDeleted element of your list : " << t->value << endl;
+		delete t; 
+	}
+}
+
+void insert_last()
+{
+	Node *Temp = new Node();
+
+	int num;
+	cout << "\nEnter the value of Node : ";
+	cin >> num;
+	Temp->value = num;
+	Temp->next = Head;
+
+	if(Head == NULL)
+	{
+		Temp->next = Head;
+		Head = Temp;
+	}
+	else
+	{
+		Node *q = Head;
+		while(q->next != Head)
+		{
+			q = q->next;
+		}
+		q->next = Temp;
+		Temp->next = Head;
+	}
+}
+
+void delete_last()
+{
+	if(Head == NULL)
+	{
+		cout << "\nLinked list is empty\n";
+	}
+	else if(Head->next == Head)
+	{
+		cout << "\nDeleted element of your list : " << Head->value << endl;
+		Head = NULL;
+	}
+	else
+	{
+		Node *q = Head;
+		while(q->next->next != Head)
+		{
+			q = q->next;
+		}
+		Node *tmp = q->next;
+		q->next = Head;
+
+		cout << "\nDeleted element of your list : " << tmp->value << endl;
+		delete tmp; 
+	}
+}
+
+void insert_between()
+{
+	Node *Temp = new Node();
+	int num,pos;
+
+	cout << "\nEnter any position : ";
+	cin >> pos;
+
+	if(Head == NULL)
+	{
+		cout << "\nList is empty\n";
+	}
+	else 
+	{
+		cout << "\nEnter the value of Node : ";
+		cin >> num;
+		Temp->value = num;
+		if(pos < 1)
+		{
+			cout << "\nposition must be greater than 1\n";
+		}
+		else if(pos == 1)
+		{
+			Node *q = Head;
+			while(q->next != Head)
+			{
+				q = q->next;
+			}
+			Temp->next = Head;
+			q->next = Temp;
+			Head = Temp;
+		}
+		else
+		{
+			Node *q = Head;
+			for(int i=1;i<(pos-1);i++)
+			{
+				q = q->next;
+			}
+			Temp->next = q->next;
+			q->next = Temp;
+		}	
+	}
+}
+
+
+void delete_between()
+{
+	if(Head == NULL)
+	{
+		cout << "\nList is empty\n";
+	}
+	else if(Head->next == Head)
+	{
+		cout << "\nDeleted element of your list : " << Head->value << endl;
+		Head = NULL;
+	}
+	else
+	{
+		int pos;
+		cout << "\nEnter any position : ";
+		cin >> pos;
+		Node *t = new Node();
+
+		if(pos < 1)
+		{
+			cout << "\nPosition must be greater than 1\n";
+		}
+		else if(pos == 1)
+		{
+			Node *q = Head;
+			t = Head;
+			while(q->next != Head)
+			{
+				q = q->next;
+			}
+			Head = Head->next;
+			q->next = Head;
+
+			cout << "\nDeleted element of your list is : " << t->value << endl;
+			delete t;
+		}
+		else
+		{
+			Node *q = Head;
+			for(int i=1;i<(pos-1);i++)
+			{
+				q = q->next;
+			}
+			t = q->next;
+			q->next = t->next;
+
+			cout << "\nDeleted element of your list is : " << t->value << endl;
+			delete t;
+		}
+	}
+}
+
+
+void count()
+{
+	if(Head == NULL)
+	{
+		cout << "\nLinked List is empty\n";
+	}
+	else
+	{
+		Node *s = Head;
+		int count = 1;
+		while(s->next != Head)
+		{
+			count++;
+			s = s->next;
+		}
+		cout << "\nTotal no.of nodes are : " << count << endl;
+	}
+}
+
+void search()
+{
+	if(Head == NULL)
+	{
+		cout << "\nList is empty\n";
+	}
+	else
+	{
+		int no,flag=0;
+		cout << "\nEnter any number which you want to found : ";
+		cin >> no;
+
+		Node *Q = Head;
+		while(Q->next != Head)
+		{
+			if(Q->value == no)
+			{
+				flag = 1;
+				break;
+			}
+			Q = Q->next;
+		}
+		if(flag == 1)
+		{
+			cout << "\nNumber : " << no << " is found from the list\n";
+		}
+		else
+		{
+			cout << "\nNot Found\n";
+		}
+	}
+}
+
+void display()
+{
+	if(Head == NULL)
+	{
+		cout << "\nLinked List is empty\n";
+	}
+	else
+	{
+		Node *s = Head;
+
+		cout << "\nCircular :: ";
+		while(s->next != Head)
+		{
+			//cout << "<-[ " << s->value << " | " << s->next << " ]";
+			cout << "<-[ " << s->value << " ]";
+			s = s->next;
+		}
+		//cout << "->[ " << s->value << " | " << s->next << " ]<-";
+		cout << "<-[ " << s->value << " ]<-";
+		cout << endl;
+	}
+}
+
+int main()
+{
+	int Choice;
+	while(Choice != 10)
+	{
+		cout << "\n(1) Inert_first,(2) Insert_last,(3) Insert_between" << endl;
+		cout << "(4) Delete_first,(5) Delete_last,(6) Delete_between" << endl;
+		cout << "(7) count,(8) search,(9) Display \nEnter Choice :: ";
+		cin >> Choice;
+
+		switch( Choice )
+		{
+			case 1:
+				insert_first();
+			break;
+
+			case 2:
+				insert_last();
+			break;
+
+			case 3:
+				insert_between();
+			break;
+
+			case 4:
+				delete_first();
+			break;
+
+			case 5:
+				delete_last();
+			break;
+
+			case 6:
+				delete_between();
+			break; 
+
+			case 7:
+				count();
+			break;
+
+			case 8:
+				search();
+			break;
+
+			case 9:
+				display();
+			break;
+
+			default:
+				exit(0);
+		}
+	}
+}
+
+
+
+
+
+/*  ( output )
+
+darshan@darshan-Swift-SF314-43:~/Desktop$ g++ circular.cpp
+darshan@darshan-Swift-SF314-43:~/Desktop$ ./a.out
+
+(1) Inert_first,(2) Insert_last,(3) Insert_between
+(4) Delete_first,(5) Delete_last,(6) Delete_between
+(7) count,(8) search,(9) Display 
+Enter Choice :: 1
+
+Enter the value of your Node : 10
+
+(1) Inert_first,(2) Insert_last,(3) Insert_between
+(4) Delete_first,(5) Delete_last,(6) Delete_between
+(7) count,(8) search,(9) Display 
+Enter Choice :: 2
+
+Enter the value of Node : 20
+
+(1) Inert_first,(2) Insert_last,(3) Insert_between
+(4) Delete_first,(5) Delete_last,(6) Delete_between
+(7) count,(8) search,(9) Display 
+Enter Choice :: 3
+
+Enter any position : 2
+
+Enter the value of Node : 15
+
+(1) Inert_first,(2) Insert_last,(3) Insert_between
+(4) Delete_first,(5) Delete_last,(6) Delete_between
+(7) count,(8) search,(9) Display 
+Enter Choice :: 9
+
+Circular :: <-[ 10 ]<-[ 15 ]<-[ 20 ]<-
+
+(1) Inert_first,(2) Insert_last,(3) Insert_between
+(4) Delete_first,(5) Delete_last,(6) Delete_between
+(7) count,(8) search,(9) Display 
+Enter Choice :: 4
+
+Deleted element of your list : 10
+
+(1) Inert_first,(2) Insert_last,(3) Insert_between
+(4) Delete_first,(5) Delete_last,(6) Delete_between
+(7) count,(8) search,(9) Display 
+Enter Choice :: 5
+
+Deleted element of your list : 20
+
+(1) Inert_first,(2) Insert_last,(3) Insert_between
+(4) Delete_first,(5) Delete_last,(6) Delete_between
+(7) count,(8) search,(9) Display 
+Enter Choice :: 6
+
+Deleted element of your list : 15
+
+(1) Inert_first,(2) Insert_last,(3) Insert_between
+(4) Delete_first,(5) Delete_last,(6) Delete_between
+(7) count,(8) search,(9) Display 
+Enter Choice :: 9
+
+Linked List is empty
+
+(1) Inert_first,(2) Insert_last,(3) Insert_between
+(4) Delete_first,(5) Delete_last,(6) Delete_between
+(7) count,(8) search,(9) Display 
+Enter Choice :: 1
+
+Enter the value of your Node : 1
+
+(1) Inert_first,(2) Insert_last,(3) Insert_between
+(4) Delete_first,(5) Delete_last,(6) Delete_between
+(7) count,(8) search,(9) Display 
+Enter Choice :: 1
+
+Enter the value of your Node : 2
+
+(1) Inert_first,(2) Insert_last,(3) Insert_between
+(4) Delete_first,(5) Delete_last,(6) Delete_between
+(7) count,(8) search,(9) Display 
+Enter Choice :: 1
+
+Enter the value of your Node : 3
+
+(1) Inert_first,(2) Insert_last,(3) Insert_between
+(4) Delete_first,(5) Delete_last,(6) Delete_between
+(7) count,(8) search,(9) Display 
+Enter Choice :: 7
+
+Total no.of nodes are : 3
+
+(1) Inert_first,(2) Insert_last,(3) Insert_between
+(4) Delete_first,(5) Delete_last,(6) Delete_between
+(7) count,(8) search,(9) Display 
+Enter Choice :: 8
+
+Enter any number which you want to found : 3
+
+Number : 3 is found from the list
+
+(1) Inert_first,(2) Insert_last,(3) Insert_between
+(4) Delete_first,(5) Delete_last,(6) Delete_between
+(7) count,(8) search,(9) Display 
+Enter Choice :: c
+darshan@darshan-Swift-SF314-43:~/Desktop$ 
+___________________________________________________________________________*/

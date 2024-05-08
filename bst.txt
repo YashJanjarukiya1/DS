@@ -1,0 +1,192 @@
+//  Binary Search Tree program.
+
+#include<iostream>
+using namespace std;
+struct Tree
+{
+	int data;
+	struct Tree *left;
+	struct Tree *right;
+};
+
+struct Tree *root = NULL;
+
+class BSTtree
+{
+	public :
+		void createTree();
+		void PreOrder(struct Tree *root);
+		void PostOrder(struct Tree *root);
+		void InOrder(struct Tree *root);
+		void search();
+};
+
+void BSTtree :: createTree()
+{
+	int num;
+	struct Tree *Temp = new Tree;
+	struct Tree *p = new Tree;
+	struct Tree *prnt = new Tree;
+	
+	cout << "Enter the value of root :: ";
+	cin >> num;
+	Temp->data = num;
+	Temp->left = NULL;
+	Temp->right = NULL;
+	
+	if(root == NULL)
+	{
+		root = Temp;
+	}
+	else
+	{
+		p = root;
+		while(p != NULL)
+		{ 
+			prnt = p;
+			if(num < p->data)
+			{
+				p = p->left;
+			}
+			else
+			{
+				p = p->right;
+			}
+		}
+		
+		if(num < prnt->data)
+		{
+			prnt->left = Temp;
+		}
+		else
+		{
+			prnt->right = Temp;
+		}
+	}
+}
+
+void BSTtree :: PreOrder(struct Tree *root)
+{
+	// Root - left - right
+
+	if(root != NULL)
+	{
+		cout << root->data << " ";
+		PreOrder(root->left);
+		PreOrder(root->right);
+	}
+}
+
+void BSTtree :: PostOrder(struct Tree *root)
+{
+	// Left - right - root
+
+	if(root != NULL)
+	{
+		PostOrder(root->left);
+		PostOrder(root->right);
+		cout << root->data << " ";
+	}
+}
+
+void BSTtree :: InOrder(struct Tree *root)
+{
+	// Left - root - right
+
+	if(root != NULL)
+	{
+		InOrder(root->left);
+		cout << root->data << " ";
+		InOrder(root->right);
+	}
+}
+
+void BSTtree :: search()
+{
+	int no;
+	cout << "Enter any number which you want : ";
+	cin >> no;
+	struct Tree *p = new Tree;
+	struct Tree *prnt = new Tree;
+	if(root->data == no)
+	{
+		cout << no << " is found\n";
+	}
+	else
+	{
+		p = root;
+		int flag = 0;
+		while(p != NULL)
+		{
+			prnt = p;
+			if(prnt->data == no)
+			{
+				flag = 1;
+			}
+			if(no < p->data)
+			{
+				p = p->left;
+			}
+			else
+			{
+				p = p->right;
+			}
+		} 
+		if(flag == 1)
+		{
+			cout << no << " is found\n";
+		}
+		else
+		{
+			cout << no << " is not Found\n";
+		}
+	} 
+}
+
+int main()
+{
+	int Choice;
+	BSTtree obj;
+	do
+	{
+		cout <<"\nEnter 0 for exit" << endl
+		<< "1.create Binary List" << endl
+		<< "2.InOrder list" << endl
+		<< "3.PretOrder List" << endl
+		<< "4.PostOrder List" << endl
+		<< "5.search" << endl
+		<< "Enter choice :: ";
+		cin >> Choice;
+		
+		switch(Choice)
+		{
+			case 1:
+				obj.createTree();
+			break;
+			
+			case 2:
+				cout << "\nInorder :: ";
+				obj.InOrder(root);
+			break;
+			
+			case 3:
+				cout << "\nPreorder :: ";
+				obj.PreOrder(root);
+			break;
+			
+			case 4:
+				cout << "\nPostorder :: ";
+				obj.PostOrder(root);
+			break;
+			
+			case 5:
+				obj.search();
+			break;
+			
+			default:
+				exit(0);
+		}
+		
+	}
+	while(Choice != 0);
+}

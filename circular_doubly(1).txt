@@ -1,0 +1,545 @@
+//  Create a Circular doubly linked list using structure class.
+
+#include<iostream>
+using namespace std;
+
+struct Node
+{
+	int value;
+	Node *next;
+	Node *prev;	
+
+}*Head = NULL;
+
+
+void insert_first()
+{
+	Node *Temp = new Node();
+
+	int num;
+	cout << "Enter the value of node : ";
+	cin >> num;
+	Temp->value = num;
+	
+	if(Head == NULL)
+	{
+		Head = Temp;
+		Temp->next = Head;
+		Temp->prev = Head;
+	}
+	else
+	{
+		Node *q = Head;
+		while(q->next != Head)
+		{
+			q = q->next;
+		}
+		Temp->next = Head;
+		Head->prev = Temp;
+		Temp->prev = q;
+		q->next = Temp;
+		Head = Temp;
+	} 
+}
+
+void delete_first()
+{
+	if(Head == NULL)
+	{
+		cout << "\nLinked List is Empty\n";
+	}
+	else if(Head->next == Head)
+	{
+		cout << "Deleted element in your list : " << Head->value << endl;
+		Head = NULL;
+	}
+	else
+	{
+		Node *q = Head;
+		Node *t = new Node();
+
+		Head = Head->next;
+		while(q->next->next != Head)
+		{
+			q = q->next;
+		}
+		t = q->next;
+		q->next = Head;
+		Head->prev = q;
+
+		cout << "Deleted element of your list : " << t->value << endl;
+		delete t; 
+	}
+}
+
+
+void insert_last()
+{
+	Node *Temp = new Node();
+
+	cout << "Enter the value of node : ";
+	cin >> Temp->value;
+
+	if(Head == NULL)
+	{
+		Head = Temp;
+		Temp->next = Head;
+		Temp->prev = Head;
+	}
+	else
+	{
+		Node *q = Head;
+		while(q->next != Head)
+		{
+			q = q->next;
+		}
+		q->next = Temp;
+		Temp->prev = q;
+		Temp->next = Head;
+	} 
+}
+
+
+void delete_last()
+{
+	if(Head == NULL)
+	{
+		cout <<"\nLinked list is empty\n";
+	}
+	else if(Head->next == Head)
+	{
+		cout << "Deleted element in your list : " << Head->value << endl;
+		Head = NULL;
+	}
+	else
+	{
+		Node *q = Head;
+
+		while(q->next->next != Head)
+		{
+			q = q->next;
+		}
+
+		Node *t = new Node();
+		t = q->next;
+
+		q->next = Head;
+		Head->prev = q;
+
+		cout << "Deleted element of your list : " << t->value << endl;
+		delete t;
+	}
+}
+
+
+void insert_between()
+{
+	if(Head == NULL)
+	{
+		cout << "\nLinked List is Empty\n";
+	}
+	else
+	{
+		int pos,no;
+		cout << "Enter a position : ";
+		cin >> pos;
+
+		Node *tmp = new Node();
+		cout << "Enter the value of node : ";
+		cin >> no;
+		tmp->value = no;
+
+		if(pos == 1)
+		{
+			Node *q = Head;
+			while(q->next != Head)
+			{
+				q = q->next;
+			}
+			q->next = tmp;
+			tmp->prev = q;
+			tmp->next = Head;
+			Head->prev = tmp;
+			Head = tmp;
+		}
+		else
+		{
+			Node *q = Head;
+			for(int i=1;i<(pos-1);i++)
+			{
+				q = q->next;
+			}
+			tmp->next = q->next;
+			q->next->prev = tmp;
+			tmp->prev = q;
+			q->next = tmp;
+		} 
+	}
+}
+
+
+void count()
+{
+	if(Head == NULL)
+	{
+		cout << "\nLinked list is empty\n";
+	}
+	else
+	{
+		int count = 0;
+
+		Node *q = Head;
+		while(q->next != Head)
+		{
+			count++;
+			q = q->next;
+		}
+
+		cout << "Total no.of nodes in your list is : " << count+1 << endl;
+	}
+}
+
+void search()
+{
+	if(Head == NULL)
+	{
+		cout << "\nLinked list is empty\n";
+	}
+	else
+	{
+		int found,flag = 0;
+		cout << "enter any value : ";
+		cin >> found;
+
+		Node *q = Head;
+		
+		while(q->next != Head)
+		{
+			if(q->value == found)
+			{
+				flag = 1;
+				break;
+			}
+			q = q->next;
+		}
+
+		if(flag == 1)
+		{
+			cout << "\nNumber is found in the list\n";
+		}
+		else
+		{
+			cout << "\nNumber is not found\n";
+		}
+	}
+}
+
+
+void display()
+{
+	if(Head == NULL) 
+	{
+		cout << "Linked list is empty\n";
+	}
+	else
+	{
+		Node *q = Head;
+		cout << "\nCircular Doubly List :: ";
+		while(q->next != Head)
+		{
+			cout << "->[ " << q->prev << " | " << q->value << " | " << q->next << " ]";
+			//cout << "->[ " << q->value << " ]";
+			q = q->next;
+		}
+		 cout << "->[ " << q->prev << " | " << q->value << " | " << q->next << " ]<-";
+		// cout << "->[ " << q->value << " ]<-";
+	}
+}
+
+int main()
+{
+	int ch;
+	while(ch != 9)
+	{
+		cout<< "\nEnter\n1.insert_first\n2.insert_last\n3.insert_between";
+		cout<<"\n4.delete_first\n5.delete_last\n6.count";
+		cout<<"\n7.search\n8.display\nEnter Choice :: ";
+		cin >> ch;
+
+		switch(ch)
+		{
+			case 1:
+				insert_first();
+			break;
+
+			case 2:
+				insert_last();
+			break;
+
+			case 3:
+				insert_between();
+			break; 
+
+			case 4:
+				delete_first();
+			break;
+
+			case 5:
+				delete_last();
+			break;
+
+			case 6:
+				count();
+			break; 
+
+			case 7:
+				search();
+			break; 
+
+			case 8:
+				display();
+			break;
+
+			default :
+			exit(0);
+		}
+	}
+}
+
+/* output :
+
+darshan@darshan-Swift-SF314-43:~/Desktop/Data Structure/unit-3$ g++ Doubly_circular.cpp
+darshan@darshan-Swift-SF314-43:~/Desktop/Data Structure/unit-3$ ./a.out
+
+Enter
+1.insert_first
+2.insert_last
+3.insert_between
+4.delete_first
+5.delete_last
+6.count
+7.search
+8.display
+Enter Choice :: 1
+Enter the value of node : 10
+
+Enter
+1.insert_first
+2.insert_last
+3.insert_between
+4.delete_first
+5.delete_last
+6.count
+7.search
+8.display
+Enter Choice :: 8
+
+Circular Doubly List :: ->[ 0x55664ef336d0 | 10 | 0x55664ef336d0 ]<-
+Enter
+1.insert_first
+2.insert_last
+3.insert_between
+4.delete_first
+5.delete_last
+6.count
+7.search
+8.display
+Enter Choice :: 1
+Enter the value of node : 11
+
+Enter
+1.insert_first
+2.insert_last
+3.insert_between
+4.delete_first
+5.delete_last
+6.count
+7.search
+8.display
+Enter Choice :: 8
+
+Circular Doubly List :: ->[ 0x55664ef336d0 | 11 | 0x55664ef336d0 ]->[ 0x55664ef336f0 | 10 | 0x55664ef336f0 ]<-
+Enter
+1.insert_first
+2.insert_last
+3.insert_between
+4.delete_first
+5.delete_last
+6.count
+7.search
+8.display
+Enter Choice :: 1
+Enter the value of node : 12
+
+Enter
+1.insert_first
+2.insert_last
+3.insert_between
+4.delete_first
+5.delete_last
+6.count
+7.search
+8.display
+Enter Choice :: 8
+
+Circular Doubly List :: ->[ 0x55664ef336d0 | 12 | 0x55664ef336f0 ]->[ 0x55664ef33710 | 11 | 0x55664ef336d0 ]->[ 0x55664ef336f0 | 10 | 0x55664ef33710 ]<-
+Enter
+1.insert_first
+2.insert_last
+3.insert_between
+4.delete_first
+5.delete_last
+6.count
+7.search
+8.display
+Enter Choice :: 2
+Enter the value of node : 9
+
+Enter
+1.insert_first
+2.insert_last
+3.insert_between
+4.delete_first
+5.delete_last
+6.count
+7.search
+8.display
+Enter Choice :: 8
+
+Circular Doubly List :: ->[ 0x55664ef336d0 | 12 | 0x55664ef336f0 ]->[ 0x55664ef33710 | 11 | 0x55664ef336d0 ]->[ 0x55664ef336f0 | 10 | 0x55664ef33730 ]->[ 0x55664ef336d0 | 9 | 0x55664ef33710 ]<-
+Enter
+1.insert_first
+2.insert_last
+3.insert_between
+4.delete_first
+5.delete_last
+6.count
+7.search
+8.display
+Enter Choice :: 3
+Enter a position : 3
+Enter the value of node : 15
+
+Enter
+1.insert_first
+2.insert_last
+3.insert_between
+4.delete_first
+5.delete_last
+6.count
+7.search
+8.display
+Enter Choice :: 8
+
+Circular Doubly List :: ->[ 0x55664ef336d0 | 12 | 0x55664ef336f0 ]->[ 0x55664ef33710 | 11 | 0x55664ef33750 ]->[ 0x55664ef336f0 | 15 | 0x55664ef336d0 ]->[ 0x55664ef33750 | 10 | 0x55664ef33730 ]->[ 0x55664ef336d0 | 9 | 0x55664ef33710 ]<-
+Enter
+1.insert_first
+2.insert_last
+3.insert_between
+4.delete_first
+5.delete_last
+6.count
+7.search
+8.display
+Enter Choice :: 6
+Total no.of nodes in your list is : 5
+
+Enter
+1.insert_first
+2.insert_last
+3.insert_between
+4.delete_first
+5.delete_last
+6.count
+7.search
+8.display
+Enter Choice :: 7
+enter any value : 10
+
+Number is found in the list
+
+Enter
+1.insert_first
+2.insert_last
+3.insert_between
+4.delete_first
+5.delete_last
+6.count
+7.search
+8.display
+Enter Choice :: 4
+Deleted element of your list : 12
+
+Enter
+1.insert_first
+2.insert_last
+3.insert_between
+4.delete_first
+5.delete_last
+6.count
+7.search
+8.display
+Enter Choice :: 8
+
+Circular Doubly List :: ->[ 0x55664ef33730 | 11 | 0x55664ef33750 ]->[ 0x55664ef336f0 | 15 | 0x55664ef336d0 ]->[ 0x55664ef33750 | 10 | 0x55664ef33730 ]->[ 0x55664ef336d0 | 9 | 0x55664ef336f0 ]<-
+Enter
+1.insert_first
+2.insert_last
+3.insert_between
+4.delete_first
+5.delete_last
+6.count
+7.search
+8.display
+Enter Choice :: 6
+Total no.of nodes in your list is : 4
+
+Enter
+1.insert_first
+2.insert_last
+3.insert_between
+4.delete_first
+5.delete_last
+6.count
+7.search
+8.display
+Enter Choice :: 5
+Deleted element of your list : 9
+
+Enter
+1.insert_first
+2.insert_last
+3.insert_between
+4.delete_first
+5.delete_last
+6.count
+7.search
+8.display
+Enter Choice :: 6
+Total no.of nodes in your list is : 3
+
+Enter
+1.insert_first
+2.insert_last
+3.insert_between
+4.delete_first
+5.delete_last
+6.count
+7.search
+8.display
+Enter Choice :: 8
+
+Circular Doubly List :: ->[ 0x55664ef336d0 | 11 | 0x55664ef33750 ]->[ 0x55664ef336f0 | 15 | 0x55664ef336d0 ]->[ 0x55664ef33750 | 10 | 0x55664ef336f0 ]<-
+Enter
+1.insert_first
+2.insert_last
+3.insert_between
+4.delete_first
+5.delete_last
+6.count
+7.search
+8.display
+Enter Choice :: c
+darshan@darshan-Swift-SF314-43:~/Desktop/Data Structure/unit-3$ 
+
+*/

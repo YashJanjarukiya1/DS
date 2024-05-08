@@ -1,0 +1,79 @@
+//  Program of Selection-sort
+
+#include<iostream>
+using namespace std;
+class A
+{
+	public :
+		int a[20],n,step=0;
+		int i,j,Temp;
+
+		void get()
+		{
+			cout << "Enter the size of an array : ";
+			cin >> n;
+
+			cout << "\nEnter the elements of an array\n";
+			for(i=0;i<n;i++)
+			{
+				cin >> a[i]; 
+			}
+
+			cout << "\nBefore selection sort\nArray :: ";
+			for(i=0;i<n;i++)
+			{
+				cout << "\t" << a[i];  
+			}			
+			cout << endl;
+		}
+
+		void selection()
+		{
+			for(i=0; i<(n-1); i++)
+			{
+				step = i;
+            cout << "\nAfter step : " << step << "\nArray :: ";
+				for(j=(i+1) ;j<n ;j++)
+				{
+					if(a[step] > a[j]) 
+					{
+						step = j;
+					}
+            }
+				if(step != i)
+				{
+					Temp = a[i];
+					a[i] = a[step];
+					a[step] = Temp;
+				}
+            for(int k=0;k<n;++k)
+            {
+               cout << "\t" << a[k];  
+			   }
+		   }
+
+			cout << "\nAfter selection sort\nArray :: ";
+			for(int k=0;k<n;++k)
+			{
+				cout << "\t" << a[k]; 
+			}
+			cout << endl;
+
+		}
+};
+
+int main()
+{
+	A obj;
+	obj.get();
+	obj.selection();
+
+	return 0;
+}
+
+// Inserted value : 
+
+step1 . 2 5 1 4 3
+step2 . 2 1 4 3 5
+
+step3 . 1 2 3 4 5 <- Final Ans
